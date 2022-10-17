@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, ListItem } from "@mui/material"
+import { Button, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Admin from "../dashboard screen/admin";
 import Feedback from "../dashboard screen/feedback"
@@ -20,6 +20,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ApiIcon from '@mui/icons-material/Api';
+import Apicheck from '../dashboard screen/apicheck';
+import ApiCheck from '../dashboard screen/apicheck';
+import Screen from '../dashboard screen/screen';
 function DashBoard() {
     const drawerWidth = 240;
 
@@ -77,16 +81,7 @@ function DashBoard() {
         setOpen(false);
     };
     let Navigate = useNavigate()
-    let AdminPanel = () => {
-        Navigate("admin")
-    }
-    let UserPanel = () => {
-        Navigate("user")
-    }
-    // let FeedbackPanel = () => {
-    //     Navigate("feedback")
-    // }
-    
+
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
@@ -132,28 +127,54 @@ function DashBoard() {
                         </ListItem>
                     </List>
                     <Divider />
-                    <List sx={{ display: "flex", flexDirection: "column", spacing: 5 }}>
-                        <ListItem>
-                            <AdminPanelSettingsIcon />
-
-                            <Button sx={{ color: "#262635" }} onClick={() => AdminPanel()}>Admin</Button>
-                        </ListItem>
-                        <ListItem>
-                            <AccountCircleIcon />
-                            <Button sx={{ color: "#262635" }} onClick={() => UserPanel()}>User</Button>
-                        </ListItem>
-                        {/* <ListItem> */}
-                            {/* <Button sx={{ color: "#262635" }} onClick={() => FeedbackPanel()}>Feedback</Button> */}
-                        {/* </ListItem> */}
+                    <List>
+                        {[{
+                            name: 'Admin',
+                            route: 'admin',
+                            icon: () => <AdminPanelSettingsIcon />
+                        },
+                        {
+                            name: 'User',
+                            route: 'user',
+                            icon: () => <AccountCircleIcon />
+                        }, {
+                            name: 'ApiCheck',
+                            route: 'apicheck',
+                            icon: () => <ApiIcon />
+                        }].map((text, index) => (
+                            <ListItem onClick={() => {
+                                Navigate(text.route)
+                            }} key={index} disablePadding sx={{ display: 'block' }}>
+                                <ListItemButton
+                                    sx={{
+                                        minHeight: 48,
+                                        justifyContent: open ? 'initial' : 'center',
+                                        px: 2.5,
+                                    }}
+                                >
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 3 : 'auto',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        {text.icon()}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text.name} sx={{ opacity: open ? 1 : 0 }} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
                     </List>
                 </Drawer>
                 <Main open={open}>
                     <DrawerHeader />
 
                     <Routes>
-                        <Route path="user" element={<User />} />
-                        {/* <Route path="feedback" element={<Feedback />} /> */}
-                        <Route path='admin' element={<Admin />} />
+                        <Route path="/apicheck/*" element={<ApiCheck />} />
+                        <Route path="user/" element={<User />} />
+                        <Route path='admin/' element={<Admin />} />
+                        <Route path='/screen/*' element={<Screen />} />
                     </Routes>
                 </Main>
             </Box>
